@@ -5,7 +5,7 @@ class Card:
         self.value = value
 
 class Hand:
-    def __init__(self,card1,card2):
+    def __init__(self, card1, card2):
         self.card1 = card1
         self.card2 = card2
         if self.card1.value < self.card2.value:
@@ -55,6 +55,8 @@ class HandSet:
 class Chart:
     def __init__(self,handset):
         self.chart = dict()
+        self.probability = dict()
+        self.action = dict()
         for a in handset.handset:
             if a.name not in self.chart.keys():
                 self.chart[a.name]=list()
@@ -62,19 +64,35 @@ class Chart:
             else:
                 self.chart[a.name].append(a)
         for a in self.chart.keys():
-            for b in self.chart[a]:
-                print(a + b.completeName)
-        #print(self.chart)
-        print(len(self.chart))
-        
-class player:
-    def __init__(self)
-        self.stack = 0
+            self.probability[a] = 100*len(self.chart[a])/1326
+            self.action[a] = 'Fold'
+    def updateActionProbability(self):
+        #always call this function when initiallizing a chart
+        self.fold = 0
+        self.bet = 0
+        self.call = 0
+        for a in self.action.keys():
+            if self.action[a] == 'Fold':
+                self.fold = self.fold + self.probability[a]
+            if self.action[a] == 'Raise':
+                self.bet = self.bet + self.probability[a]
+            if self.action[a] == 'Call':
+                self.fold = self.fold + self.probability[a]
+    
+    
+"""class Player:
+    def __init__(self, stack)
+        self.stack = stack
     def draw(self, hand):
         self.hand = hand
+    def endTurn (self, position)
+        self.position = position
+    def updateStack(self, winlose)
+        self.stack = self.stack + winlose"""
 
 D = Deck()
 #D.printDeck()
 H = HandSet(D)
 C = Chart(H)
+C.updateActionProbability()
 #H.printHandSet()
